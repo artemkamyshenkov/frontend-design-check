@@ -35,14 +35,19 @@ Reports are in English by default; request Russian if preferred. The skill revie
 
 ## Install
 
-For Codex, clone this repository into your user skills directory:
+Use [GitHub CLI with Agent Skills support](https://cli.github.com/manual/gh_skill_install) and run the command for your agent:
 
-```sh
-git clone https://github.com/artemkamyshenkov/frontend-design-check.git \
-  ~/.agents/skills/frontend-design-check
-```
+| Agent | Command |
+| --- | --- |
+| Codex | `gh skill install artemkamyshenkov/frontend-design-check frontend-design-check --agent codex --scope user` |
+| Claude Code | `gh skill install artemkamyshenkov/frontend-design-check frontend-design-check --agent claude-code --scope user` |
+| Cursor | `gh skill install artemkamyshenkov/frontend-design-check frontend-design-check --agent cursor --scope user` |
+| GitHub Copilot in VS Code | `gh skill install artemkamyshenkov/frontend-design-check frontend-design-check --agent github-copilot --scope user` |
+| Gemini CLI | `gh skill install artemkamyshenkov/frontend-design-check frontend-design-check --agent gemini-cli --scope user` |
 
-Start a new Codex session, then invoke `$frontend-design-check` or ask for it by name. For another agent, follow its instructions for installing skills and make sure the whole repository is available to the agent.
+For a single project, run the command from that project's repository and use `--scope project`. Start a new agent session and ask it to use `frontend-design-check`.
+
+For manual installation, copy the skill folder into your agent's skills directory. Keep `SKILL.md`, `references/`, and `scripts/` together.
 
 ## Requirements
 
@@ -51,7 +56,25 @@ Start a new Codex session, then invoke `$frontend-design-check` or ask for it by
 - A browser tool that supports viewport changes, page inspection, and screenshots, or Playwright with Google Chrome. Extra browser checks require the corresponding browser tools and runtimes.
 - For a live Figma comparison, access to the file through a supported Figma connection. Local images and saved references do not require Figma access.
 
-The agent checks prerequisites before starting and explains what is missing. You can ask it to help set up a browser; see [browser setup](references/browser-setup.md) for the available options.
+## Browser setup
+
+If your agent already has a browser tool that can resize the viewport, inspect the page, and take screenshots, use it for the review.
+
+For the bundled capture script, install Node.js 20+ and [Google Chrome](https://www.google.com/chrome/), then install Playwright once in a separate user directory.
+
+**macOS and Linux**
+
+```sh
+npm install --prefix "$HOME/.local/share/frontend-design-check" --save-exact playwright@1.62.1
+```
+
+**Windows (PowerShell)**
+
+```powershell
+npm install --prefix "$env:LOCALAPPDATA\frontend-design-check" --save-exact playwright@1.62.1
+```
+
+Ask your agent to verify that Playwright can launch Chrome before starting the review. If you used a custom install directory, give it the absolute path to `node_modules/playwright`. You can also connect [Playwright MCP](https://github.com/microsoft/playwright-mcp) as your agent's browser tool. See the [browser setup guide](references/browser-setup.md) for details.
 
 ## Contributing
 

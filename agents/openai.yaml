@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design Check"
+  short_description: "Адаптивность страниц и фич, сравнение с макетом"
+  default_prompt: "Используй $frontend-design-check: проверь адаптивность страницы или фичи в браузере и подготовь HTML-отчёт; сравни с макетом, если он предоставлен."

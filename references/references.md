@@ -64,7 +64,7 @@ Store used images and `reference-manifest.json` with the scenario in every run p
 }
 ```
 
-Top-level `capturedAt` is the package assembly time; `items[].capturedAt` is when that reference was obtained. When copying from cache, preserve the item's original date. For an old package without it, use the known package date with an explanation. Do not call capture date a Figma version. If the version is unavailable, say so. Additionally save only used measurements and node links, without a full corporate file dump.
+Top-level `capturedAt` is the package assembly time; `items[].capturedAt` is when that reference was obtained. When copying from cache, preserve the item's original date. For an old package without it, use the known package date with an explanation. Do not call capture date a Figma version. If the version is unavailable, say so. Additionally save only used measurements and node links, without a full file dump.
 
 Repeating a comparison with a saved package does not require Figma. In the report provide original reference dates and state that Figma freshness was not checked. Refresh the package on user request or when the current design is needed, keeping the previous package. An implementation screenshot becomes an approved baseline only after explicit approval.
 

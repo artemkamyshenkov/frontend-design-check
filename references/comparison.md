@@ -4,7 +4,7 @@
 
 Compare matching states and regions at the same viewport width. Do not stretch a desktop design to mobile. If a reference is unavailable for a width, check integrity and known rules without inventing expected geometry.
 
-Prioritize significant problems: incorrect composition, overlaps, missing elements, clipped text and substantial spacing differences. The initial adjustable spacing filter is |actual−expected| ≥ 4 CSS px AND a relative difference ≥ 20%. When expected=0, use only the absolute threshold. This is a skill heuristic, not a Kite standard. Do not apply it mechanically to fonts, icons or functional failures. By default, small differences below the filter do not clutter the main findings.
+Prioritize significant problems: incorrect composition, overlaps, missing elements, clipped text and substantial spacing differences. The initial adjustable spacing filter is |actual−expected| ≥ 4 CSS px AND a relative difference ≥ 20%. When expected=0, use only the absolute threshold. This is a skill heuristic, not a design-system standard. Do not apply it mechanically to fonts, icons or functional failures. By default, small differences below the filter do not clutter the main findings.
 
 For each finding specify width/state, element, expected and actual values, source (Figma node or PNG), evidence (measurement/screenshot), impact and confidence. DOM values are measurements; PNG values are visual estimates unless measured separately. Figma reference code can aid analysis but is not application code and may contain rounding. Ignore hidden design layers.
 

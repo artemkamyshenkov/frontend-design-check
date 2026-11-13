@@ -4,6 +4,46 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+const TRANSLATIONS = {
+  "Проверено: совпадает": "Checked: matches",
+  "Нужен просмотр": "Review needed",
+  "Нет референса": "No reference",
+  "Заблокировано": "Blocked",
+  "Пропущено": "Skipped",
+  "Измерено без снимка": "Measured without screenshot",
+  "Дизайн-чек": "Design review",
+  "Окружение не указано": "Environment not specified",
+  "Цель": "Target",
+  "Не указана": "Not specified",
+  "Сравнение подготовлено агентом. Визуальный difference не является автоматическим вердиктом.": "This comparison was prepared by an agent. The difference view is not an automatic verdict.",
+  "Замечания не внесены. Это не означает, что все проверки выполнены: см. покрытие и ограничения.": "No findings recorded. This does not mean every check was completed; see coverage and limitations.",
+  "Замечания": "Findings",
+  "Элемент / влияние": "Element / impact",
+  "Ожидалось": "Expected",
+  "Получено": "Actual",
+  "Доказательство": "Evidence",
+  "Браузер не указан": "Browser not specified",
+  "Покрытие": "Coverage",
+  "Браузер": "Browser",
+  "Ширина": "Width",
+  "Состояние": "State",
+  "Статус": "Status",
+  "Примечание": "Notes",
+  "Референс": "Reference",
+  "Реализация": "Implementation",
+  "Масштаб неизвестен: только просмотр рядом, без наложения и точных измерений по изображению. Картинки могут отображаться уменьшенными.": "Scale unknown: side-by-side view only, without overlay or precise image measurements. Images may be displayed smaller.",
+  "Наложение и difference": "Overlay and difference",
+  "Оба изображения уменьшены в одном масштабе до ширины контейнера; пропорции сохранены. Выравнивание по верхнему левому углу. Различия данных и шрифтов могут давать шум.": "Both images are scaled down equally to fit the container, preserving proportions, and aligned at the top left. Different data and fonts may add noise.",
+  "Режим: наложение 50%": "Mode: 50% overlay",
+  "Режим: difference": "Mode: difference",
+  "Нет референса: соответствие макету не подтверждено.": "No reference: design conformity was not verified.",
+  "Снимок не включён: ширина проверена измерениями. Подробности указаны в примечании.": "No screenshot included: this width was checked using measurements. See notes for details.",
+  "Снимок реализации не получен.": "No implementation screenshot captured.",
+  "Ограничения не заполнены; полнота проверки не подтверждена.": "Limitations were not provided; review completeness is not confirmed.",
+  "Ограничения": "Limitations",
+  "Условия и источники": "Conditions and sources",
+  "Не указаны": "Not specified"
+};
 const STATUS = new Map(Object.entries({
   matched: 'Проверено: совпадает', review: 'Нужен просмотр',
   'no-reference': 'Нет референса', blocked: 'Заблокировано',
@@ -42,6 +82,9 @@ function embed(item, root) {
   return `<img style="${style}" src="data:${mime};base64,${raw.toString('base64')}" alt="${esc(item.label ?? path.basename(filename))}">`;
 }
 function build(data, root) {
+  const lang = data.language ?? 'en';
+  if (!['en', 'ru'].includes(lang)) throw new Error('language must be en or ru');
+  const translate = value => lang === 'ru' ? value : (TRANSLATIONS[value] ?? value);
   root = fs.realpathSync(root);
   const checks = data.checks;
   if (!Array.isArray(checks) || !checks.length) throw new Error('checks: нужна хотя бы одна запись, в том числе blocked для незавершённой проверки');
@@ -49,23 +92,23 @@ function build(data, root) {
   if (!Array.isArray(findings)) throw new Error('findings должен быть списком');
   const css = "body{font:16px/1.5 system-ui,sans-serif;color:#181c2d;background:#f4f4fa;max-width:1280px;margin:32px auto;padding:0 20px}h1{font-size:30px}section{background:white;border-radius:16px;padding:24px;margin:24px 0}.browser-group{border:2px solid #e0d9ff}.check{border-top:1px solid #ddd;padding-top:20px;margin-top:20px}table{width:100%;min-width:760px;border-collapse:collapse}.table-scroll{overflow-x:auto}td,th{text-align:left;padding:10px;border-bottom:1px solid #ddd;vertical-align:top;overflow-wrap:anywhere}code,p,li,pre{overflow-wrap:anywhere}.scroll{background:#ececf3;padding:12px;min-width:0}.pair{display:flex;gap:16px;align-items:flex-start}.pair figure{margin:0;flex:1;min-width:0}@media(max-width:700px){.pair{flex-direction:column}.pair figure{width:100%}}figcaption{font-weight:600;margin-bottom:8px}img{display:block;height:auto;max-width:100%;object-fit:contain}.overlay{display:grid;grid-template-columns:minmax(0,1fr);isolation:isolate;max-width:100%}.overlay img{grid-area:1/1;align-self:start;justify-self:start}.overlay img:nth-child(2){opacity:.5}.overlay.diff img:nth-child(2){opacity:1;mix-blend-mode:difference}button{padding:8px 16px;cursor:pointer;margin:12px 0}summary{cursor:pointer;margin-top:12px}small{color:#555a7a}pre{white-space:pre-wrap}";
   const result = [
-    `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(data.title ?? 'Дизайн-чек')}</title><style>${css}</style></head><body>`,
-    `<h1>${esc(data.title ?? 'Дизайн-чек')}</h1>`,
-    `<p>${esc(data.environment ?? 'Окружение не указано')}</p><p>Цель: <code>${esc(data.target ?? 'Не указана')}</code></p>`,
-    '<p>Сравнение подготовлено агентом. Визуальный difference не является автоматическим вердиктом.</p>',
-    '<section><h2>Замечания</h2>',
+    `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(data.title ?? translate('Дизайн-чек'))}</title><style>${css}</style></head><body>`,
+    `<h1>${esc(data.title ?? translate('Дизайн-чек'))}</h1>`,
+    `<p>${esc(data.environment ?? translate('Окружение не указано'))}</p><p>${translate('Цель')}: <code>${esc(data.target ?? translate('Не указана'))}</code></p>`,
+    `<p>${translate('Сравнение подготовлено агентом. Визуальный difference не является автоматическим вердиктом.')}</p>`,
+    `<section><h2>${translate('Замечания')}</h2>`,
   ];
-  if (!findings.length) result.push('<p>Замечания не внесены. Это не означает, что все проверки выполнены: см. покрытие и ограничения.</p>');
+  if (!findings.length) result.push(`<p>${translate('Замечания не внесены. Это не означает, что все проверки выполнены: см. покрытие и ограничения.')}</p>`);
   else {
-    result.push('<table><thead><tr><th>Элемент / влияние</th><th>Ожидалось</th><th>Получено</th><th>Доказательство</th></tr></thead><tbody>');
+    result.push(`<table><thead><tr><th>${translate('Элемент / влияние')}</th><th>${translate('Ожидалось')}</th><th>${translate('Получено')}</th><th>${translate('Доказательство')}</th></tr></thead><tbody>`);
     for (const f of findings) {
       if (!f.title || !f.evidence) throw new Error('Каждому замечанию нужны title и evidence');
       const comparison = f.comparison ? `<br>${esc(f.comparison)}` : '';
-      result.push(`<tr><td><b>${esc(f.title)}</b><br>${esc(f.severity ?? 'review')} · ${esc(f.browser ?? 'Браузер не указан')} · ${esc(f.viewport ?? '—')} px · ${esc(f.state ?? 'default')}${comparison}<br>${esc(f.impact ?? '')}</td><td>${esc(f.expected ?? '—')}</td><td>${esc(f.actual ?? '—')}</td><td>${esc(f.evidence)}<br>${esc(f.source ?? '')}<br>${esc(f.confidence ?? '')}</td></tr>`);
+      result.push(`<tr><td><b>${esc(f.title)}</b><br>${esc(f.severity ?? 'review')} · ${esc(f.browser ?? translate('Браузер не указан'))} · ${esc(f.viewport ?? '—')} px · ${esc(f.state ?? 'default')}${comparison}<br>${esc(f.impact ?? '')}</td><td>${esc(f.expected ?? '—')}</td><td>${esc(f.actual ?? '—')}</td><td>${esc(f.evidence)}<br>${esc(f.source ?? '')}<br>${esc(f.confidence ?? '')}</td></tr>`);
     }
     result.push('</tbody></table>');
   }
-  result.push('</section><section><h2>Покрытие</h2><table><thead><tr><th>Браузер</th><th>Ширина</th><th>Состояние</th><th>Статус</th><th>Примечание</th></tr></thead><tbody>');
+  result.push(`</section><section><h2>${translate('Покрытие')}</h2><table><thead><tr><th>${translate('Браузер')}</th><th>${translate('Ширина')}</th><th>${translate('Состояние')}</th><th>${translate('Статус')}</th><th>${translate('Примечание')}</th></tr></thead><tbody>`);
   const browsers = new Map();
   checks.forEach((check, i) => {
     if (typeof check.browser !== 'string' || !check.browser.trim()) throw new Error('Каждой проверке требуется непустое поле browser');
@@ -81,29 +124,29 @@ function build(data, root) {
     if (!['blocked', 'skipped', 'measured'].includes(status) && !actual) throw new Error('Для незаблокированной проверки нужен actual');
     if (status === 'matched' && !reference) throw new Error('matched требует референс; используйте no-reference');
     const state = esc(check.state ?? 'default');
-    result.push(`<tr><td>${label}</td><td>${viewport}</td><td>${state}</td><td>${STATUS.get(status)}</td><td>${esc(check.notes ?? '')}</td></tr>`);
+    result.push(`<tr><td>${label}</td><td>${viewport}</td><td>${state}</td><td>${translate(STATUS.get(status))}</td><td>${esc(check.notes ?? '')}</td></tr>`);
     const metadata = meta ? `<p><small>${meta}</small></p>` : '';
-    sections.push(`<article class="check"><h3>${viewport} px · ${state}</h3>${metadata}<p>${STATUS.get(status)}</p><p>${esc(check.notes ?? '')}</p>`);
+    sections.push(`<article class="check"><h3>${viewport} px · ${state}</h3>${metadata}<p>${translate(STATUS.get(status))}</p><p>${esc(check.notes ?? '')}</p>`);
     const a = actual ? embed(actual, root) : '';
     const b = reference ? embed(reference, root) : '';
-    const pair = `<div class="scroll"><div class="pair"><figure><figcaption>Референс</figcaption>${b}</figure><figure><figcaption>Реализация</figcaption>${a}</figure></div></div>`;
+    const pair = `<div class="scroll"><div class="pair"><figure><figcaption>${translate('Референс')}</figcaption>${b}</figure><figure><figcaption>${translate('Реализация')}</figcaption>${a}</figure></div></div>`;
     if (a && b && (actual.cssWidth == null || reference.cssWidth == null)) {
-      sections.push(`<p>Масштаб неизвестен: только просмотр рядом, без наложения и точных измерений по изображению. Картинки могут отображаться уменьшенными.</p>${pair}`);
+      sections.push(`<p>${translate('Масштаб неизвестен: только просмотр рядом, без наложения и точных измерений по изображению. Картинки могут отображаться уменьшенными.')}</p>${pair}`);
     } else if (a && b) {
-      sections.push(`${pair}<details><summary>Наложение и difference</summary><p><small>Оба изображения уменьшены в одном масштабе до ширины контейнера; пропорции сохранены. Выравнивание по верхнему левому углу. Различия данных и шрифтов могут давать шум.</small></p><button data-overlay="overlay-${i}" aria-pressed="false">Режим: наложение 50%</button><div class="scroll"><div id="overlay-${i}" class="overlay" style="width:${Math.max(actual.cssWidth, reference.cssWidth)}px">${b.replace(`width:${reference.cssWidth}px`, `width:${100 * reference.cssWidth / Math.max(actual.cssWidth, reference.cssWidth)}%`)}${a.replace(`width:${actual.cssWidth}px`, `width:${100 * actual.cssWidth / Math.max(actual.cssWidth, reference.cssWidth)}%`)}</div></div></details>`);
-    } else if (a) sections.push(`<p>Нет референса: соответствие макету не подтверждено.</p><div class="scroll">${a}</div>`);
-    else if (status === 'measured') sections.push('<p>Снимок не включён: ширина проверена измерениями. Подробности указаны в примечании.</p>');
-    else sections.push('<p>Снимок реализации не получен.</p>');
+      sections.push(`${pair}<details><summary>${translate('Наложение и difference')}</summary><p><small>${translate('Оба изображения уменьшены в одном масштабе до ширины контейнера; пропорции сохранены. Выравнивание по верхнему левому углу. Различия данных и шрифтов могут давать шум.')}</small></p><button data-overlay="overlay-${i}" aria-pressed="false">${translate('Режим: наложение 50%')}</button><div class="scroll"><div id="overlay-${i}" class="overlay" style="width:${Math.max(actual.cssWidth, reference.cssWidth)}px">${b.replace(`width:${reference.cssWidth}px`, `width:${100 * reference.cssWidth / Math.max(actual.cssWidth, reference.cssWidth)}%`)}${a.replace(`width:${actual.cssWidth}px`, `width:${100 * actual.cssWidth / Math.max(actual.cssWidth, reference.cssWidth)}%`)}</div></div></details>`);
+    } else if (a) sections.push(`<p>${translate('Нет референса: соответствие макету не подтверждено.')}</p><div class="scroll">${a}</div>`);
+    else if (status === 'measured') sections.push(`<p>${translate('Снимок не включён: ширина проверена измерениями. Подробности указаны в примечании.')}</p>`);
+    else sections.push(`<p>${translate('Снимок реализации не получен.')}</p>`);
     sections.push('</article>');
   });
   result.push('</tbody></table></section>');
   for (const [browser, sections] of browsers) {
-    result.push(`<section class="browser-group"><h2>Браузер: ${esc(browser)}</h2>`, ...sections, '</section>');
+    result.push(`<section class="browser-group"><h2>${translate('Браузер')}: ${esc(browser)}</h2>`, ...sections, '</section>');
   }
-  result.push('<section><h2>Ограничения</h2><ul>');
-  for (const note of data.limitations ?? ['Ограничения не заполнены; полнота проверки не подтверждена.']) result.push(`<li>${esc(note)}</li>`);
-  result.push('</ul><h2>Условия и источники</h2><pre>' + esc(data.provenance ?? 'Не указаны') + '</pre></section>');
-  result.push(`<script>document.querySelectorAll('button[data-overlay]').forEach(button=>button.addEventListener('click',()=>{const diff=document.getElementById(button.dataset.overlay).classList.toggle('diff');button.setAttribute('aria-pressed',String(diff));button.textContent=diff?'Режим: difference':'Режим: наложение 50%';}));</script></body></html>`);
+  result.push(`<section><h2>${translate('Ограничения')}</h2><ul>`);
+  for (const note of data.limitations ?? [translate('Ограничения не заполнены; полнота проверки не подтверждена.')]) result.push(`<li>${esc(note)}</li>`);
+  result.push(`</ul><h2>${translate('Условия и источники')}</h2><pre>` + esc(data.provenance ?? translate('Не указаны')) + '</pre></section>');
+  result.push(`<script>document.querySelectorAll('button[data-overlay]').forEach(button=>button.addEventListener('click',()=>{const diff=document.getElementById(button.dataset.overlay).classList.toggle('diff');button.setAttribute('aria-pressed',String(diff));button.textContent=diff?'${translate('Режим: difference')}':'${translate('Режим: наложение 50%')}';}));</script></body></html>`);
   return result.join('').replaceAll('<table>', '<div class="table-scroll"><table>').replaceAll('</table>', '</table></div>');
 }
 function main(args) {

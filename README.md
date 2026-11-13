@@ -1,137 +1,58 @@
 # Frontend Design Check
 
-Проверяет, как выглядит страница или отдельная фича на разных размерах экрана, сравнивает с макетом при его наличии и создаёт HTML-отчёт со снимками и замечаниями.
+**Give your coding agent a URL. Get a responsive review with a shareable HTML report.**
 
-## Как использовать
+Frontend Design Check is an agent skill for reviewing a page or a specific UI feature across screen sizes. Give it a Figma design or local screenshots to compare against, or use it to spot responsive issues without a design.
 
-После установки попросите своего агента использовать `frontend-design-check`. Укажите адрес страницы и что нужно проверить. Режим определяется по запросу; названия внутренних настроек знать не нужно.
+## Try it
 
-### Проверка страницы
-
-```text
-Используй frontend-design-check. Проверь страницу <URL> на ширинах 360, 768, 1024 и 1440 px. Подготовь HTML-отчёт.
-```
-
-Агент проверит адаптивность: обрезанный текст, наложения, переполнение и доступность элементов. Макет не обязателен.
-
-### Проверка отдельной фичи
+After installation, ask your agent:
 
 ```text
-Используй frontend-design-check. Проверь модалку деталей билета на <URL> на разных размерах экрана. Она открывается кнопкой «Выбрать билет» в карточке.
+Use frontend-design-check to review http://localhost:3000 at 360, 768,
+1024, and 1440 px. Check for layout problems and create an HTML report.
 ```
 
-Агент откроет фичу и проверит её. Если знаете атрибут элемента, добавьте его, например `data-ti="offer-card"`. Это помогает найти блок, но не обязательно.
-
-### Сравнение с Figma
+For a design comparison, include a Figma link or paths to screenshots:
 
 ```text
-Используй frontend-design-check. Сравни индикатор выгоды на <URL> с макетом <ссылка Figma>. Проверь десктоп, 768, 767 и мобильную ширину. Нужен отчёт с расхождениями.
+Use frontend-design-check to compare the pricing card on
+http://localhost:3000 with <Figma link>. Check desktop and mobile,
+and create an HTML report with screenshots and findings.
 ```
 
-В Figma выберите нужный фрейм и скопируйте ссылку на него. Можно прислать общий фрейм с несколькими размерами и состояниями: агент найдёт подходящие варианты внутри. Отдельные ссылки на каждый размер удобны, но не обязательны. Если нужное состояние на сайте появляется после действия, опишите его.
+Describe how to open the feature if it needs a click or a particular state. A selector can help, but isn't required when the agent can identify the element.
 
-### Сравнение со скриншотами макета
+## What you get
 
-```text
-Используй frontend-design-check. Проверь карточку на <URL>. Макеты: <desktop.png> для экрана 1440 px и <mobile.png> для 360 px. Изображения экспортированы в масштабе 1×.
-```
+- A review of the whole page or a focused feature, such as a modal or card.
+- Checks at your chosen widths and relevant layout breakpoints.
+- Optional comparison with Figma or PNG/JPEG references.
+- A standalone HTML report with screenshots, findings, and review limitations. When a reference is available, the report supports side-by-side comparison and an overlay where the image scale is known.
+- Reusable Figma references for follow-up checks after fixes.
 
-Подключение к Figma не требуется. Укажите ширину экрана и масштаб экспорта, если они известны: это поможет корректно сравнить размеры.
+Reports are in English by default; request Russian if preferred. The skill reviews the interface; it does not change application code. Without a reference, it reports responsive issues rather than claiming a match to a design.
 
-### Повтор после исправлений
+## Install
 
-```text
-Повтори frontend-design-check на <URL>. Используй макеты из прошлого отчёта <путь к отчёту или папке результатов>. Проверь ту же фичу и состояния, Figma не обновляй.
-```
-
-Агент повторно использует сохранённые референсы. Если нужен текущий макет, напишите «обнови референсы из Figma».
-
-## Возможности
-
-- Проверка страницы целиком или отдельного блока, включая модалки и раскрывающиеся элементы.
-- Проверка на заданных ширинах и рядом с точками изменения компоновки. Без макета и заданных размеров используются 360, 768, 1024 и 1440 px.
-- Сравнение с Figma или PNG/JPEG: композиция, отступы, выравнивание, размеры и видимые расхождения.
-- HTML-отчёт со снимками рядом и переключаемым наложением. Изображения помещаются по ширине; отчёт можно передать одним файлом.
-- Закрытие мешающих рекламных окон штатным крестиком или кнопкой закрытия. Проверяемая модалка остаётся открытой; согласия и подписки автоматически не подтверждаются.
-- После сохранения и проверки отчёта агент закрывает созданную для проверки сессию браузера или свои вкладки. Окно можно оставить по просьбе пользователя; при ожидании входа или ручного действия оно остаётся открытым. Исходные вкладки пользователя сохраняются.
-- Сохранение референсов Figma для повторных проверок без лишних запросов. При использовании сохранённого макета в отчёте указывается его дата.
-
-По умолчанию проверка выполняется в Google Chrome. Можно попросить расширенную проверку с дополнительными ширинами и браузерами. Для каждого дополнительного браузера нужен доступный инструмент: например, Playwright WebKit требует отдельной установки и не заменяет проверку настоящего Safari. Агент сначала проверит возможности окружения и сообщит, что недоступно.
-
-Скилл проверяет интерфейс и готовит замечания. Исправление кода, оформление покупок, подписки и публикация отчёта в эту проверку не входят. В отчёте указаны проверенные состояния и ограничения; наличие отчёта не означает, что проверены все сценарии продукта.
-
-## Установка
-
-После публикации установите `frontend-design-check` через Skill Store для своего агента либо выполните команду установки, которую предлагает карточка скилла в Store. Способ подключения зависит от клиента агента; скилл не привязан к одному клиенту.
-
-Установка скилла добавляет инструкции и вспомогательные файлы. Node.js, браузер и подключение к Figma настраиваются отдельно, если их ещё нет.
-
-## Первый запуск
-
-Можно поручить подготовку агенту:
-
-```text
-Подготовь окружение для frontend-design-check. Проверь Node.js, браузерные инструменты и Google Chrome. Если чего-то не хватает, объясни варианты и помоги настроить выбранный вариант. После этого проверь доступ к <URL>.
-```
-
-Для работы нужны:
-
-- Доступная страница приложения. Если необходимы VPN, вход в аккаунт или тестовые данные, подготовьте их в окружении, где агент запускает браузер.
-- Node.js 18+ для сборки HTML-отчёта. При использовании указанной ниже версии Playwright нужен Node.js 20+.
-- Способ управления браузером: уже подключённый инструмент агента с изменением размера окна, чтением страницы и снимками либо локальный Playwright с Google Chrome.
-- Для сравнения по ссылке Figma — доступ к файлу через локальный Figma Desktop MCP или плагин Figma, поддерживаемый вашим клиентом агента. Если оба недоступны, агент предложит передать скриншоты или восстановить подключение.
-
-Агент проверяет доступ до основного прогона. Если обязательного инструмента или доступа нет, сообщает причину и ждёт решения. Установка скилла сама по себе не даёт доступ к корпоративным ресурсам. Новый профиль браузера может потребовать отдельного входа на сайт.
-
-## Как настроить Playwright
-
-Если у агента уже есть подходящий браузерный инструмент, дополнительная установка Playwright может не понадобиться. Иначе доступны два варианта.
-
-### Вариант 1. Локальный пакет Playwright и Google Chrome
-
-Подходит для агента, который может выполнять команды на вашем компьютере. Отдельный постоянно работающий сервер не нужен: во время проверки агент запускает браузер через установленный пакет.
-
-**1. Проверьте Node.js и npm** в терминале:
+For Codex, clone this repository into your user skills directory:
 
 ```sh
-node --version
-npm --version
+git clone https://github.com/artemkamyshenkov/frontend-design-check.git \
+  ~/.agents/skills/frontend-design-check
 ```
 
-Для проверенной с этим скиллом версии Playwright 1.62.1 нужен Node.js 20+. Также должен быть установлен Google Chrome.
+Start a new Codex session, then invoke `$frontend-design-check` or ask for it by name. For another agent, follow its instructions for installing skills and make sure the whole repository is available to the agent.
 
-**2. Установите Playwright один раз в отдельную папку текущего пользователя.**
+## Requirements
 
-macOS/Linux:
+- An accessible page and any sign-in or test data needed to reach the requested state.
+- Node.js 18+ for the HTML report.
+- A browser tool that supports viewport changes, page inspection, and screenshots, or Playwright with Google Chrome. Extra browser checks require the corresponding browser tools and runtimes.
+- For a live Figma comparison, access to the file through a supported Figma connection. Local images and saved references do not require Figma access.
 
-```sh
-npm install --prefix "$HOME/.local/share/frontend-design-check" --save-exact playwright@1.62.1
-```
+The agent checks prerequisites before starting and explains what is missing. You can ask it to help set up a browser; see [browser setup](references/browser-setup.md) for the available options.
 
-Windows PowerShell:
+## Contributing
 
-```powershell
-npm install --prefix "$env:LOCALAPPDATA\frontend-design-check" --save-exact playwright@1.62.1
-```
-
-`--prefix` указывает, в какую папку npm установит пакет. Например, на macOS/Linux Playwright окажется в `~/.local/share/frontend-design-check/node_modules/playwright`. Рядом npm сохраняет сведения о зависимостях. Это отдельная локальная установка для текущего пользователя, которую можно использовать при проверке разных проектов.
-
-Эта команда не устанавливает пакет глобально и не делает его автоматически доступным из любого Node.js-скрипта. Агент должен передать путь к пакету инструменту проверки. Добавлять эту папку в `PATH` не нужно. `--save-exact` фиксирует указанную версию. Подробнее о локальной установке — в [документации npm](https://docs.npmjs.com/cli/v11/configuring-npm/folders/).
-
-**3. Сообщите агенту, куда установили пакет, и попросите проверить запуск.**
-
-```text
-Я установил Playwright в отдельную пользовательскую папку frontend-design-check командой из README. Найди пакет в ней, используй его для скилла и проверь запуск Google Chrome, изменение размера окна и создание скриншота. Затем проверь доступ к <URL>.
-```
-
-Агент определит абсолютный путь и передаст его при запуске проверки. Если выбрали другую папку, укажите её в запросе. Для стандартной проверки используется установленный Chrome; скачивать все браузеры Playwright не требуется.
-
-### Вариант 2. Playwright MCP
-
-Подходит, если вы хотите подключить управление браузером как инструмент агента. MCP настраивается в клиенте агента; это самостоятельный вариант подключения, локальный пакет из первого варианта для него не обязателен.
-
-```text
-Помоги подключить Playwright MCP к моему агенту <название клиента>. Покажи необходимые настройки и после подключения проверь запуск браузера, изменение размера окна, чтение страницы и создание скриншота.
-```
-
-Следуйте [официальной инструкции Playwright MCP](https://github.com/microsoft/playwright-mcp) для своего клиента. Настройка MCP сама по себе не подтверждает готовность: после подключения нужно проверить инструменты и доступ к нужному сайту. Если агент работает на удалённой машине, её localhost отличается от localhost вашего компьютера.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development checks.

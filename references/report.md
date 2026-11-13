@@ -2,6 +2,8 @@
 
 ## 5. Deliver the result
 
+Use English for the report by default, or Russian when the user requests it. Set `language` to `en` or `ru` and write the title, findings, notes, limitations and other agent-authored text in that language. If another language is requested, explain that report interface labels currently support English and Russian and ask which to use.
+
 Create `report.json` using [report-format.md](report-format.md), then run:
 
 ```sh
@@ -18,4 +20,4 @@ In fast mode, first give a short result: link, up to four main findings if any, 
 
 Do not fix application code or designs during a design check. Publishing the report externally or updating an approved baseline requires a separate request.
 
-Without a design, title the result “Responsive review of page/feature”. Use `no-reference` for screenshots, or `review` when issues are confirmed; use `measured` for measurements without screenshots. Never use `matched` without a reference. State that design conformity was not checked. Record missing, hidden or ambiguous targets as `blocked` with reason, width and state. List untested widths separately; do not present an interrupted run as complete.
+Without a design, title the result “Responsive review of page/feature” or its equivalent in the selected language. Use `no-reference` for screenshots, or `review` when issues are confirmed; use `measured` for measurements without screenshots. Never use `matched` without a reference. State that design conformity was not checked. Record missing, hidden or ambiguous targets as `blocked` with reason, width and state. List untested widths separately; do not present an interrupted run as complete.

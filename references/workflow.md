@@ -2,9 +2,9 @@
 
 ## Preflight before the main run
 
-First check all prerequisites for the current request: Node.js 18+, an available browser and required capabilities, URL and correct page, feature presence and opening, and reference access for comparisons. Continue checking independent prerequisites that remain available; mark dependent checks “not checked” (e.g. the feature when the page is unavailable). Do not check unrelated corporate systems.
+First check all prerequisites for the current request: Node.js 18+, an available browser and required capabilities, URL and correct page, feature presence and opening, and reference access for comparisons. Continue checking independent prerequisites that remain available; mark dependent checks “not checked” (e.g. the feature when the page is unavailable). Do not check unrelated systems.
 
-Show a short available / unavailable / not checked list with observed causes. VPN, a desktop client and HTTP 200 do not prove access: inspect page content, login redirects and authorization for the specific tool. Distinguish timeout, DNS, connection refusal, 401/403, missing element and ambiguous selector. Do not attribute a failure to VPN without evidence. For corporate documents use the relevant MCP under environment rules.
+Show a short available / unavailable / not checked list with observed causes. VPN, a desktop client and HTTP 200 do not prove access: inspect page content, login redirects and authorization for the specific tool. Distinguish timeout, DNS, connection refusal, 401/403, missing element and ambiguous selector. Do not attribute a failure to VPN without evidence. For external documents use the relevant available integration under environment rules.
 
 If all prerequisites are available, proceed without confirmation. If a mandatory prerequisite is unavailable, stop before the matrix, offer concrete options and await the user's decision. Do not automatically install dependencies or reduce the agreed scope. This rule overrides the fallback scenarios below. If a blocker arises during the run, save results obtained and stop the dependent part; agree on continuation with reduced coverage.
 
@@ -31,7 +31,7 @@ Only for comparison with a design read source and local cache details: [referenc
 
 ## 2. Choose mode and matrix
 
-If the repository is available, read its instructions and relevant code. Without code access continue using designs and observed UI, noting unknown breakpoints as a limitation. If code is available, obtain breakpoints from the current design system/theme. For Kite inspect `@tutu/kite/sass/helpers.scss`: it may reference `@tutu/mother-of-tokens/styles/public/helpers.scss`. Follow imports to actual values, not examples in comments. For white label inspect the applied theme and overrides.
+If the repository is available, read its instructions and relevant code. Without code access continue using designs and observed UI, noting unknown breakpoints as a limitation. If code is available, obtain breakpoints from the current design system/theme. Follow theme and stylesheet imports to actual values, not examples in comments. For white label inspect the applied theme and overrides.
 
 Find both global breakpoints and those actually used by the target component. Choose a reasonable viewport height (e.g. 1000 CSS px) and record it in the report.
 

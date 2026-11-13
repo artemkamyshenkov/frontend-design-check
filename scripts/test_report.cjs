@@ -9,7 +9,7 @@ const { build } = require('./build_report.cjs');
 const script = path.join(__dirname, 'build_report.cjs');
 const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZ1cAAAAASUVORK5CYII=', 'base64');
 function fixture() {
-  return { title: '<script>alert(1)</script>', target: '[data-ti="feature"]', environment: 'macOS, DPR 1', limitations: ['Live data'], checks: [{ browser: 'Google Chrome', viewport: 360, state: 'default', status: 'review', actual: { path: 'a.png', cssWidth: 1 }, reference: { path: 'a.png', cssWidth: 1 }, notes: '<b>test</b>' }], findings: [{ title: 'Spacing', severity: 'major', browser: 'Google Chrome', evidence: 'DOM 24 vs Figma 16', expected: '16', actual: '24', viewport: 360 }] };
+  return { language: 'ru', title: '<script>alert(1)</script>', target: '[data-ti="feature"]', environment: 'macOS, DPR 1', limitations: ['Live data'], checks: [{ browser: 'Google Chrome', viewport: 360, state: 'default', status: 'review', actual: { path: 'a.png', cssWidth: 1 }, reference: { path: 'a.png', cssWidth: 1 }, notes: '<b>test</b>' }], findings: [{ title: 'Spacing', severity: 'major', browser: 'Google Chrome', evidence: 'DOM 24 vs Figma 16', expected: '16', actual: '24', viewport: 360 }] };
 }
 function run(t, mutate = () => {}, setup = () => {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'design-report-'));
@@ -93,4 +93,21 @@ test('malformed JSON creates no report', t => {
 test('CLI help and argument count', () => {
   assert.equal(spawnSync(process.execPath, [script, '--help']).status, 0);
   assert.notEqual(spawnSync(process.execPath, [script]).status, 0);
+});
+
+test('report language defaults to English and preserves supplied content', t => {
+  const html = ok(run(t, d => { delete d.language; d.findings[0].title = 'Замечания'; d.findings = []; }));
+  assert.match(html, /<html lang="en">/); assert.match(html, /<h2>Findings<\/h2>/);
+  assert.match(html, /No findings recorded/); assert.match(html, /Mode: 50% overlay/);
+  assert.ok(!html.includes('Замечания не внесены'));
+});
+test('Russian report localizes labels and dynamic overlay control', t => {
+  const html = ok(run(t));
+  assert.match(html, /<html lang="ru">/); assert.match(html, /<h2>Замечания<\/h2>/);
+  assert.match(html, /Режим: наложение 50%/); assert.match(html, /Режим: difference/);
+});
+test('reject unsupported report language', t => rejected(run(t, d => d.language = 'fr')));
+test('supplied text is not translated', t => {
+  const html = ok(run(t, d => { d.language = 'en'; d.findings[0].title = 'Замечания'; }));
+  assert.match(html, /<b>Замечания<\/b>/);
 });

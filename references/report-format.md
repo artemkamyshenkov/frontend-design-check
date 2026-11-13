@@ -6,6 +6,7 @@ Minimal example (paths are relative to the JSON directory):
 
 ```json
 {
+  "language": "en",
   "title": "Filters design check",
   "target": "[data-ti=filters]",
   "environment": "macOS, DPR 1, viewport height 1000, ru-RU, 2026-01-01",
@@ -41,6 +42,8 @@ Minimal example (paths are relative to the JSON directory):
   ]
 }
 ```
+
+`language` controls report interface labels: `en` (default when omitted) or `ru`. Other values are rejected. Write all agent-authored fields in the same selected language; the generator does not translate supplied content.
 
 `cssWidth` is the natural width of the depicted region in CSS px, not the viewport or necessarily the PNG width. For example, a 656 px @2x PNG of a 328 px card gets `cssWidth: 328`. Preserve proportions: the generator uses the original aspect ratio. Record the original scale in provenance. If unknown, pass `cssWidth: null`: the generator shows both images side by side with a warning and disables overlay. Clarify export details for precise comparison; do not guess width.
 

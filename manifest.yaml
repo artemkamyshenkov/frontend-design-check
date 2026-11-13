@@ -1,7 +1,0 @@
-name: frontend-design-check
-type: skill
-short_description: "Проверяет адаптивность страницы или фичи в браузере, сравнивает с Figma/PNG при наличии макета и формирует HTML-отчёт."
-entry: SKILL.md
-framework_restrict: []
-categories: [design, qa]
-keywords: [дизайн-чек, адаптивность, брейкпоинты, figma, visual-review]

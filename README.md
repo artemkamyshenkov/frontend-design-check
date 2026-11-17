@@ -1,5 +1,13 @@
 # Frontend Design Check
 
+<p align="center">
+  <img
+    src="./assets/cover.png"
+    alt="Frontend Design Check — responsive UI review"
+    width="800"
+  />
+</p>
+
 **Give your coding agent a URL. Get a responsive review with a shareable HTML report.**
 
 Frontend Design Check is an agent skill for reviewing a page or a specific UI feature across screen sizes. Give it a Figma design or local screenshots to compare against, or use it to spot responsive issues without a design.
